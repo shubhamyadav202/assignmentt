@@ -1,9 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import HeroBanner from './HeroBanner';
 import Stats from './Stats';
-import Header from './Header';
 
 // Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
@@ -15,8 +14,6 @@ export default function CarScrollSection() {
   const carRef = useRef(null);
   const trailRef = useRef(null);
   const lettersRef = useRef([]);
-
-  const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
     // Accessibility check: prefers-reduced-motion
@@ -141,10 +138,7 @@ export default function CarScrollSection() {
           pin: trackEl,
           pinSpacing: true,
           scrub: 1.1, // Fluid 60fps scrub
-          invalidateOnRefresh: true,
-          onUpdate: (self) => {
-            setScrollProgress(self.progress);
-          }
+          invalidateOnRefresh: true
         }
       });
 
@@ -243,8 +237,6 @@ export default function CarScrollSection() {
     <section className="car-scroll-section" ref={sectionRef} id="experience">
       {/* Sticky/Pinned Visual Stage */}
       <div className="track-stage" ref={trackRef}>
-        <Header scrollProgress={scrollProgress} />
-
         {/* 4 Surrounding Metric Cards */}
         <Stats />
 
