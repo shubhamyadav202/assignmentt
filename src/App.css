@@ -1,0 +1,510 @@
+/* ==========================================================================
+   CAR SCROLL ANIMATION — HIGH FIDELITY STYLES
+   Recreation of https://paraschaturvedi.github.io/car-scroll-animation/
+   ========================================================================== */
+
+/* Main Container */
+.app-container {
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--color-dark-bg);
+  position: relative;
+}
+
+/* Scroll Section (GSAP Pin Container) */
+.car-scroll-section {
+  position: relative;
+  width: 100%;
+  background-color: var(--color-dark-bg);
+}
+
+/* Pinned Visual Stage */
+.track-stage {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-stage-bg);
+  overflow: hidden;
+  user-select: none;
+}
+
+/* Header */
+.app-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 1.5rem 2.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 25;
+  pointer-events: none;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.brand-badge {
+  font-family: var(--font-heading);
+  font-weight: 900;
+  font-size: 1.15rem;
+  letter-spacing: 0.1em;
+  color: #111;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 0.35rem 0.85rem;
+  border-radius: 6px;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.brand-subtitle {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: rgba(17, 17, 17, 0.65);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.telemetry-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(20, 20, 20, 0.85);
+  color: #fff;
+  padding: 0.4rem 0.9rem;
+  border-radius: 9999px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--color-trail);
+  box-shadow: 0 0 8px var(--color-trail);
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+/* ==========================================================================
+   ROAD & CAR BANNER
+   ========================================================================== */
+
+.road-container {
+  width: 100vw;
+  height: 200px;
+  background-color: var(--color-road);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.25),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.5);
+  z-index: 10;
+}
+
+/* Green dynamic trail */
+.road-trail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: var(--color-trail);
+  z-index: 2;
+  width: 0;
+  will-change: width;
+  box-shadow: 4px 0 15px rgba(69, 219, 125, 0.4);
+}
+
+/* Big Typography "WELCOME ITZFIZZ" */
+.road-headline {
+  position: absolute;
+  left: 5%;
+  top: 50%;
+  transform: translateY(-50%);
+  margin: 0;
+  padding: 0;
+  font-size: clamp(3rem, 7.8vw, 8rem);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  line-height: 0.9;
+  z-index: 5;
+  display: flex;
+  user-select: none;
+  pointer-events: none;
+}
+
+.value-letter {
+  color: #111111;
+  opacity: 0;
+  display: inline-block;
+  transform: translateY(5px);
+  transition: opacity 0.12s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.12s ease;
+  will-change: opacity, transform;
+}
+
+/* Car Styling */
+.car-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  z-index: 15;
+  will-change: transform;
+  pointer-events: none;
+}
+
+.car-image {
+  height: 190px;
+  width: auto;
+  object-fit: contain;
+  filter: 
+    drop-shadow(0 14px 18px rgba(0, 0, 0, 0.45))
+    drop-shadow(0 4px 6px rgba(0, 0, 0, 0.35));
+}
+
+/* ==========================================================================
+   STATISTIC CARDS (4 Surround Cards)
+   ========================================================================== */
+
+.stats-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 8;
+}
+
+.stat-card {
+  position: absolute;
+  padding: 24px 28px;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 4px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.14), 0 2px 6px rgba(0, 0, 0, 0.08);
+  min-width: 180px;
+  max-width: 250px;
+  will-change: transform, opacity;
+  pointer-events: auto;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.18), 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.stat-number {
+  font-size: 54px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.stat-label {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.35;
+  opacity: 0.95;
+}
+
+/* Layout Positions matching reference */
+#box1 {
+  top: 7%;
+  right: 32%;
+}
+
+#box2 {
+  bottom: 7%;
+  right: 36%;
+}
+
+#box3 {
+  top: 7%;
+  right: 8%;
+}
+
+#box4 {
+  bottom: 7%;
+  right: 11%;
+}
+
+/* ==========================================================================
+   BOTTOM SCROLL INDICATOR
+   ========================================================================== */
+
+.scroll-indicator-container {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.scroll-indicator-container.scrolled-dim {
+  opacity: 0.35;
+  transform: translateX(-50%) translateY(6px);
+}
+
+.scroll-indicator-container:hover {
+  opacity: 1 !important;
+  transform: translateX(-50%) translateY(0);
+}
+
+.scroll-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  background: rgba(18, 18, 18, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 0.65rem 1.4rem;
+  border-radius: 9999px;
+  backdrop-filter: blur(12px);
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  transition: all 0.25s ease;
+}
+
+.scroll-pill:hover {
+  background: rgba(10, 10, 10, 0.95);
+  border-color: var(--color-trail);
+}
+
+.scroll-mouse {
+  width: 18px;
+  height: 28px;
+  border: 2px solid rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  padding-top: 4px;
+}
+
+.scroll-wheel {
+  width: 3px;
+  height: 6px;
+  background-color: var(--color-trail);
+  border-radius: 2px;
+  animation: wheelScroll 1.6s infinite ease-in-out;
+}
+
+@keyframes wheelScroll {
+  0% { transform: translateY(0); opacity: 1; }
+  60% { transform: translateY(8px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 0; }
+}
+
+.scroll-text {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+   POST-HERO / FOOTER CONTENT (For complete application polish)
+   ========================================================================== */
+
+.app-footer {
+  width: 100%;
+  padding: 4rem 2rem 3rem;
+  background-color: #0d0d0d;
+  color: #e5e5e5;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  border-top: 1px solid #222;
+  position: relative;
+  z-index: 10;
+}
+
+.footer-content {
+  max-width: 800px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.footer-title {
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #fff;
+}
+
+.footer-desc {
+  font-size: 0.95rem;
+  color: #888;
+  line-height: 1.6;
+}
+
+.footer-badges {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+.tech-badge {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  padding: 0.4rem 0.85rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-family: var(--font-mono);
+  color: #ccc;
+}
+
+/* ==========================================================================
+   RESPONSIVENESS (Desktop, Tablet, Mobile)
+   ========================================================================== */
+
+/* Laptop / Medium Screens */
+@media (max-width: 1200px) {
+  #box1 { right: 28%; top: 6%; }
+  #box2 { right: 32%; bottom: 6%; }
+  #box3 { right: 5%; top: 6%; }
+  #box4 { right: 7%; bottom: 6%; }
+
+  .stat-card {
+    padding: 18px 22px;
+    min-width: 160px;
+  }
+
+  .stat-number {
+    font-size: 44px;
+  }
+
+  .stat-label {
+    font-size: 13px;
+  }
+
+  .road-container {
+    height: 180px;
+  }
+
+  .car-image {
+    height: 170px;
+  }
+}
+
+/* Tablet Screens */
+@media (max-width: 900px) {
+  .road-container {
+    height: 160px;
+  }
+
+  .car-image {
+    height: 150px;
+  }
+
+  .road-headline {
+    font-size: clamp(2.2rem, 7vw, 5rem);
+    left: 4%;
+  }
+
+  #box1 { top: 5%; left: 8%; right: auto; }
+  #box2 { bottom: 5%; left: 8%; right: auto; }
+  #box3 { top: 5%; right: 6%; }
+  #box4 { bottom: 5%; right: 6%; }
+
+  .stat-card {
+    padding: 14px 18px;
+    min-width: 140px;
+    max-width: 200px;
+  }
+
+  .stat-number {
+    font-size: 36px;
+  }
+
+  .stat-label {
+    font-size: 12px;
+  }
+}
+
+/* Mobile Screens */
+@media (max-width: 600px) {
+  .app-header {
+    padding: 1rem 1.25rem;
+  }
+
+  .brand-subtitle {
+    display: none;
+  }
+
+  .road-container {
+    height: 130px;
+  }
+
+  .car-image {
+    height: 120px;
+  }
+
+  .road-headline {
+    font-size: clamp(1.6rem, 6.2vw, 3rem);
+    left: 3%;
+  }
+
+  /* Compact 2x2 distribution for mobile so no overlap occurs */
+  #box1 { top: 5%; left: 4%; right: auto; }
+  #box3 { top: 5%; right: 4%; left: auto; }
+  #box2 { bottom: 6%; left: 4%; right: auto; }
+  #box4 { bottom: 6%; right: 4%; left: auto; }
+
+  .stat-card {
+    padding: 10px 12px;
+    min-width: 120px;
+    max-width: 140px;
+    border-radius: 8px;
+  }
+
+  .stat-number {
+    font-size: 26px;
+  }
+
+  .stat-label {
+    font-size: 10px;
+    line-height: 1.2;
+  }
+
+  .scroll-pill {
+    padding: 0.5rem 1rem;
+  }
+
+  .scroll-text {
+    font-size: 0.68rem;
+  }
+}
